@@ -1,0 +1,16 @@
+route:
+    receiver: 'email'
+
+receivers:
+    - name: 'email'
+      email_configs:
+          - send_resolved: true
+            to: 'EMAIL_TARGET_HERE'
+            smarthost: 'SMTP_HOST:PORT'
+            auth_username: 'USERNAME'
+            auth_password: 'PASSWORD'
+            hello: 'DOMAIN'
+            from: 'ORIGIN_ADDRESS'
+            text: "{{ .CommonAnnotations.description }}"
+
+# See https://prometheus.io/docs/alerting/configuration/
