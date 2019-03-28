@@ -3,6 +3,9 @@ version: '2.1'
 networks:
   monitor-net:
     driver: bridge
+  wamc-web:
+    external:
+      name: wamclocal_web
 
 volumes:
     prometheus_data: {}
@@ -99,13 +102,19 @@ services:
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
     restart: unless-stopped
     expose:
       - 3000
     networks:
       - monitor-net
+      - wamc-web
     labels:
       org.label-schema.group: "monitoring"
+      traefik.enable: "true"
+      traefik.docker.network: "wamclocal_web"
+      traefik.frontend.rule: "PathPrefixStrip:/grafana"
+      traefik.port: "3000"
 
   pushgateway:
     image: prom/pushgateway:v0.7.0
