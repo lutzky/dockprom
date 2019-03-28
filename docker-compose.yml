@@ -24,6 +24,8 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.external-url=https://wamc.lutzky.net/prometheus'
+      - '--web.route-prefix=/'
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
     restart: unless-stopped
@@ -31,8 +33,13 @@ services:
       - 9090
     networks:
       - monitor-net
+      - wamc-web
     labels:
       org.label-schema.group: "monitoring"
+      traefik.enable: "true"
+      traefik.docker.network: "wamclocal_web"
+      traefik.frontend.rule: "PathPrefixStrip:/prometheus"
+      traefik.port: "9090"
 
   alertmanager:
     image: prom/alertmanager:v0.16.1
@@ -42,13 +49,20 @@ services:
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
+      - '--web.external-url=https://wamc.lutzky.net/alertmanager'
+      - '--web.route-prefix=/'
     restart: unless-stopped
     expose:
       - 9093
     networks:
       - monitor-net
+      - wamc-web
     labels:
       org.label-schema.group: "monitoring"
+      traefik.enable: "true"
+      traefik.docker.network: "wamclocal_web"
+      traefik.frontend.rule: "PathPrefixStrip:/alertmanager"
+      traefik.port: "9093"
 
   nodeexporter:
     image: prom/node-exporter:v0.17.0
