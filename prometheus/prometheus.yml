@@ -18,6 +18,11 @@ scrape_configs:
     static_configs:
       - targets: ['nodeexporter:9100']
 
+  - job_name: 'sonarr_exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['sonarrexporter:9715']
+
   - job_name: 'cadvisor'
     scrape_interval: 5s
     static_configs:

@@ -1,0 +1,4 @@
+{
+  "apiKey": "INSERT_API_KEY_HERE",
+  "sonarrUrl": "http://wamc_sonarr:8989/api"
+}
