@@ -270,6 +270,8 @@ To push data, simply execute:
 
 Please replace the `user:password` part with your user and password set in the initial configuration (default: `admin:admin`).
 
+Please configure your cron system to automatically run exporters/all.sh; this will push some useful metrics, see the exporters directory.
+
 ## Updating Grafana to v5.2.2
 
 [In Grafana versions >= 5.1 the id of the grafana user has been changed](http://docs.grafana.org/installation/docker/#migration-from-a-previous-version-of-the-docker-container-to-5-1-or-later). Unfortunately this means that files created prior to 5.1 won’t have the correct permissions for later versions.

@@ -38,3 +38,12 @@ groups:
     annotations:
       summary: "Server storage is almost full"
       description: "Docker host storage usage is {{ humanize $value}}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+
+  - alert: reboot_required
+    expr: node_reboot_required > 0
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Server reboot required"
+      description: "Docker host requires reboot."
