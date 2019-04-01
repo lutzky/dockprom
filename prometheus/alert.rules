@@ -27,7 +27,7 @@ groups:
       severity: critical
     annotations:
       summary: "Sonarr is experiencing health issues"
-      description: "Sonarr is indicating health issues"
+      description: "Sonarr is indicating health issues. See https://wamc.lutzky.net/sonarr/system/status"
 
 - name: host
   rules:
