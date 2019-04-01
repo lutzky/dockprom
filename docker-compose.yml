@@ -103,6 +103,21 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
+  radarrexporter:
+    image: lutzky/sonarr_exporter
+    container_name: radarrexporter
+    volumes:
+      - ./radarrexporter:/config
+    command:
+      - '/sonarr_exporter'
+      - '-configFile=/config/config.json'
+    restart: unless-stopped
+    networks:
+      - monitor-net
+      - wamc-web
+    labels:
+      org.label-schema.group: "monitoring"
+
   cadvisor:
     image: google/cadvisor:v0.33.0
     container_name: cadvisor
