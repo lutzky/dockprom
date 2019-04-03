@@ -22,7 +22,7 @@ groups:
       description: "Sonarr cannot be reached or is otherwise indicating a system error"
   - alert: sonarr_unhealthy
     expr:  sonarr_health_issues > 0
-    for: 30s
+    for: 30m
     labels:
       severity: critical
     annotations:
