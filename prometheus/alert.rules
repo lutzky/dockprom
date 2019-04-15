@@ -33,7 +33,7 @@ groups:
   rules:
   - alert: high_cpu_load
     expr: node_load1 > 5
-    for: 120s
+    for: 4h
     labels:
       severity: warning
     annotations:
@@ -42,7 +42,7 @@ groups:
 
   - alert: high_memory_load
     expr: (sum(node_memory_MemTotal_bytes) - sum(node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes) ) / sum(node_memory_MemTotal_bytes) * 100 > 85
-    for: 30s
+    for: 4h
     labels:
       severity: warning
     annotations:
