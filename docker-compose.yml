@@ -29,8 +29,6 @@ services:
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
     restart: unless-stopped
-    expose:
-      - 9090
     networks:
       - monitor-net
       - wamc-web
@@ -52,8 +50,6 @@ services:
       - '--web.external-url=https://wamc.lutzky.net/alertmanager'
       - '--web.route-prefix=/'
     restart: unless-stopped
-    expose:
-      - 9093
     networks:
       - monitor-net
       - wamc-web
@@ -79,8 +75,6 @@ services:
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
     restart: unless-stopped
-    expose:
-      - 9100
     networks:
       - monitor-net
     labels:
@@ -95,8 +89,6 @@ services:
       - '/sonarr_exporter'
       - '-configFile=/config/config.json'
     restart: unless-stopped
-    expose:
-      - 9715
     networks:
       - monitor-net
       - wamc-web
@@ -128,8 +120,6 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
     restart: unless-stopped
-    expose:
-      - 8080
     networks:
       - monitor-net
     labels:
@@ -150,8 +140,6 @@ services:
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
     restart: unless-stopped
-    expose:
-      - 3000
     networks:
       - monitor-net
       - wamc-web
@@ -166,8 +154,6 @@ services:
     image: prom/pushgateway:v0.7.0
     container_name: pushgateway
     restart: unless-stopped
-    expose:
-      - 9091
     networks:
       - monitor-net
     labels:

@@ -1,8 +1,12 @@
 #!/bin/bash
 
+set -e
+
 cd $(dirname $0)
+
+host=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' pushgateway)
 
 for i in *.exporter.sh; do
   ./$i | curl --data-binary @- \
-    http://admin:admin@localhost:9091/metrics/job/nodeexporter
+    http://${host}:9091/metrics/job/nodeexporter
 done
