@@ -159,3 +159,21 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+
+  blackbox_exporter:
+    container_name: blackbox_exporter
+    restart: unless-stopped
+    image: prom/blackbox-exporter:master
+    networks:
+      - monitor-net
+      - wamc-web
+    volumes:
+      - ./prober:/config
+    command:
+      - --config.file=/config/config.yml
+    labels:
+      org.label-schema.group: "monitoring"
+      traefik.enable: "true"
+      traefik.docker.network: "wamc_web"
+      traefik.frontend.rule: "PathPrefixStrip:/prober"
+      traefik.port: "9115"
