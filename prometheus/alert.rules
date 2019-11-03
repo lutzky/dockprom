@@ -3,7 +3,10 @@ groups:
   rules:
   - alert: monitor_service_down
     expr: up == 0
-    for: 30s
+    # System will sometimes become unresponsive for a couple of minutes
+    # during heavy I/O; not worth alerting for unless it lasts for a
+    # long time.
+    for: 10m
     labels:
       severity: critical
     annotations:
