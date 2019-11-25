@@ -60,6 +60,23 @@ services:
       traefik.frontend.rule: "PathPrefixStrip:/alertmanager"
       traefik.port: "9093"
 
+  alertmanager-bot:
+    image: metalmatze/alertmanager-bot:0.4.0
+    container_name: alertmanager-bot
+    volumes:
+      - ./alertmanager-bot:/data
+    environment:
+      - ALERTMANAGER_URL=http://alertmanager:9093/
+      - BOLT_PATH=/data/bot.db
+      - STORE=bolt
+      - TELEGRAM_ADMIN=${TELEGRAM_ADMIN:?TELEGRAM_ADMIN undefined in .env}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN:?TELEGRAM_TOKEN undefined in .env}
+      - TEMPLATE_PATHS=/templates/default.tmpl
+      - LISTEN_ADDR=0.0.0.0:8080
+    restart: unless-stopped
+    networks:
+      - monitor-net
+
   nodeexporter:
     image: prom/node-exporter:v0.17.0
     container_name: nodeexporter
