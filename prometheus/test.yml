@@ -1,0 +1,75 @@
+rule_files:
+  - alert.rules
+
+evaluation_interval: 1m
+
+tests:
+   - interval: 1m
+     input_series:
+       - series: 'sonarr_status{instance="sonarrexporter:9715", job="sonarr_exporter", sonarr_name="sonarr"}'
+         values: '1 1 0 0 1'
+       - series: 'sonarr_status{instance="radarrexporter:9715", job="radarr_exporter", sonarr_name="radarr"}'
+         values: '1 1 0 0 1'
+
+     alert_rule_test:
+       - eval_time: 30s
+         alertname: sonarr_down
+         exp_alerts: []
+
+       - eval_time: 4m
+         alertname: sonarr_down
+         exp_alerts: []
+
+       - eval_time: 3m
+         alertname: sonarr_down
+         exp_alerts:
+           - exp_labels:
+               severity: critical
+               instance: sonarrexporter:9715
+               job: sonarr_exporter
+               sonarr_name: sonarr
+             exp_annotations:
+               summary: "sonarr is down"
+               description: "sonarr cannot be reached or is otherwise indicating a system error"
+           - exp_labels:
+               severity: critical
+               instance: radarrexporter:9715
+               job: radarr_exporter
+               sonarr_name: radarr
+             exp_annotations:
+               summary: "radarr is down"
+               description: "radarr cannot be reached or is otherwise indicating a system error"
+
+
+   - interval: 1m
+     input_series:
+       - series: 'sonarr_health_issues{instance="sonarrexporter:9715", job="sonarr_exporter", sonarr_name="sonarr"}'
+         values: '1+0x61'
+       - series: 'sonarr_health_issues{instance="radarrexporter:9715", job="radarr_exporter", sonarr_name="radarr"}'
+         values: '1+0x61'
+
+
+     alert_rule_test:
+       - eval_time: 10m
+         alertname: sonarr_unhealthy
+         exp_alerts: []
+
+       - eval_time: 60m
+         alertname: sonarr_unhealthy
+         exp_alerts:
+           - exp_labels:
+               severity: critical
+               instance: sonarrexporter:9715
+               job: sonarr_exporter
+               sonarr_name: sonarr
+             exp_annotations:
+               summary: "sonarr is experiencing health issues"
+               description: "sonarr is indicating health issues."
+           - exp_labels:
+               severity: critical
+               instance: radarrexporter:9715
+               job: radarr_exporter
+               sonarr_name: radarr
+             exp_annotations:
+               summary: "radarr is experiencing health issues"
+               description: "radarr is indicating health issues."

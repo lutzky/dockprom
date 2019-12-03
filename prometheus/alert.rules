@@ -21,16 +21,16 @@ groups:
     labels:
       severity: critical
     annotations:
-      summary: "Sonarr is down"
-      description: "Sonarr cannot be reached or is otherwise indicating a system error"
+      summary: "{{$labels.sonarr_name}} is down"
+      description: "{{$labels.sonarr_name}} cannot be reached or is otherwise indicating a system error"
   - alert: sonarr_unhealthy
     expr:  sonarr_health_issues > 0
     for: 60m
     labels:
       severity: critical
     annotations:
-      summary: "Sonarr is experiencing health issues"
-      description: "Sonarr is indicating health issues. See https://wamc.lutzky.net/sonarr/system/status"
+      summary: "{{$labels.sonarr_name}} is experiencing health issues"
+      description: "{{$labels.sonarr_name}} is indicating health issues."
 
 - name: host
   rules:
