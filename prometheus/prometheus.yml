@@ -21,10 +21,17 @@ scrape_configs:
   - job_name: 'sonarr_exporter'
     static_configs:
       - targets: ['sonarrexporter:9715']
+    relabel_configs:
+      - target_label: 'sonarr_name'
+        replacement: 'sonarr'
+
 
   - job_name: 'radarr_exporter'
     static_configs:
       - targets: ['radarrexporter:9715']
+    relabel_configs:
+      - target_label: 'sonarr_name'
+        replacement: 'radarr'
 
   - job_name: 'cadvisor'
     static_configs:
