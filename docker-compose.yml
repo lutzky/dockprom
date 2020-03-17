@@ -32,12 +32,15 @@ services:
     networks:
       - monitor-net
       - wamc-web
+    expose:
+      - 9090
     labels:
       org.label-schema.group: "monitoring"
       traefik.enable: "true"
       traefik.docker.network: "wamc_default"
-      traefik.frontend.rule: "PathPrefixStrip:/prometheus"
-      traefik.port: "9090"
+      traefik.http.middlewares.prometheus-stripprefix.stripprefix.prefixes: /prometheus
+      traefik.http.routers.prometheus.rule: PathPrefix(`/prometheus`)
+      traefik.http.routers.prometheus.middlewares: prometheus-stripprefix
     links:
       - "nodeexporter:nodeexporter"
 
@@ -55,12 +58,15 @@ services:
     networks:
       - monitor-net
       - wamc-web
+    expose:
+      - 9093
     labels:
       org.label-schema.group: "monitoring"
       traefik.enable: "true"
       traefik.docker.network: "wamc_default"
-      traefik.frontend.rule: "PathPrefixStrip:/alertmanager"
-      traefik.port: "9093"
+      traefik.http.middlewares.alertmanager-stripprefix.stripprefix.prefixes: /alertmanager
+      traefik.http.routers.alertmanager.rule: PathPrefix(`/alertmanager`)
+      traefik.http.routers.alertmanager.middlewares: alertmanager-stripprefix
 
   alertmanager-bot:
     image: metalmatze/alertmanager-bot:0.4.0
@@ -165,12 +171,15 @@ services:
     networks:
       - monitor-net
       - wamc-web
+    expose:
+      - 3000
     labels:
       org.label-schema.group: "monitoring"
       traefik.enable: "true"
       traefik.docker.network: "wamc_default"
-      traefik.frontend.rule: "PathPrefixStrip:/grafana"
-      traefik.port: "3000"
+      traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes: /grafana
+      traefik.http.routers.grafana.rule: PathPrefix(`/grafana`)
+      traefik.http.routers.grafana.middlewares: grafana-stripprefix
 
   pushgateway:
     image: prom/pushgateway:v0.7.0
@@ -192,9 +201,12 @@ services:
       - ./prober:/config
     command:
       - --config.file=/config/config.yml
+    expose:
+      - 9115
     labels:
       org.label-schema.group: "monitoring"
       traefik.enable: "true"
       traefik.docker.network: "wamc_default"
-      traefik.frontend.rule: "PathPrefixStrip:/prober"
-      traefik.port: "9115"
+      traefik.http.middlewares.prober-stripprefix.stripprefix.prefixes: /prober
+      traefik.http.routers.prober.rule: PathPrefix(`/prober`)
+      traefik.http.routers.prober.middlewares: prober-stripprefix
