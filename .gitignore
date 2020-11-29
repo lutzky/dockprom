@@ -3,4 +3,4 @@
 .vscode/
 .idea/
 .env
-alertmanager-bot/
+alertmanager-bot/bot.db

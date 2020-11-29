@@ -69,7 +69,7 @@ services:
       traefik.http.routers.alertmanager.middlewares: alertmanager-stripprefix
 
   alertmanager-bot:
-    image: metalmatze/alertmanager-bot:0.4.0
+    image: metalmatze/alertmanager-bot:0.4.2
     container_name: alertmanager-bot
     volumes:
       - ./alertmanager-bot:/data
@@ -79,7 +79,7 @@ services:
       - STORE=bolt
       - TELEGRAM_ADMIN=${TELEGRAM_ADMIN:?TELEGRAM_ADMIN undefined in .env}
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN:?TELEGRAM_TOKEN undefined in .env}
-      - TEMPLATE_PATHS=/templates/default.tmpl
+      - TEMPLATE_PATHS=/data/default.tmpl
       - LISTEN_ADDR=0.0.0.0:8080
     restart: unless-stopped
     networks:
