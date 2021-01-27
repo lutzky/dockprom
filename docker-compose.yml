@@ -34,6 +34,11 @@ services:
       - wamc-web
     expose:
       - 9090
+    extra_hosts:
+      # TODO: Once host-gateway is available (docker 20.10?) use that.
+      # See https://github.com/moby/moby/pull/40007 and
+      # https://stackoverflow.com/questions/24319662
+      - "host.docker.internal:172.19.0.1"
     labels:
       org.label-schema.group: "monitoring"
       traefik.enable: "true"
