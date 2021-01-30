@@ -4,3 +4,4 @@
 .idea/
 .env
 alertmanager-bot/bot.db
+.*.swp
