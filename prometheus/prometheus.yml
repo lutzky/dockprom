@@ -46,6 +46,10 @@ scrape_configs:
     static_configs:
       - targets: ['pushgateway:9091']
 
+  - job_name: 'pitemp'
+    static_configs:
+      - targets: ['mole.lan:8080']
+
   - job_name: 'blackbox'
     metrics_path: '/probe'
     scrape_interval: 1m
