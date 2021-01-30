@@ -74,28 +74,6 @@ tests:
                summary: "radarr is experiencing health issues"
                description: "radarr is indicating health issues."
 
-   - interval: 1m
-     input_series:
-       - series: 'last_backup_success{job="nodeexporter", path="gmail"}'
-         values: '10x10'
-       - series: 'last_backup_success{job="nodeexporter", path="drive"}'
-         values: '172810x10'
-
-     alert_rule_test:
-       - eval_time: 5m
-         alertname: BackupMetadataUnavailable
-         exp_alerts: []
-       - eval_time: 15m
-         alertname: BackupMetadataUnavailable
-         exp_alerts:
-           - exp_labels:
-               severity: critical
-             exp_annotations:
-               summary: Backup metadata unavailable
-               description: >-
-                 Information about backups is unavailable, so we don't know
-                 if they're succeeding or not.
-
    - interval: 1h
      input_series:
        - series: 'last_backup_success{path="gmail"}'
