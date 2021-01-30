@@ -13,15 +13,15 @@ tests:
 
      alert_rule_test:
        - eval_time: 30s
-         alertname: sonarr_down
+         alertname: ProcessDown
          exp_alerts: []
 
        - eval_time: 4m
-         alertname: sonarr_down
+         alertname: ProcessDown
          exp_alerts: []
 
        - eval_time: 3m
-         alertname: sonarr_down
+         alertname: ProcessDown
          exp_alerts:
            - exp_labels:
                severity: critical
@@ -51,11 +51,11 @@ tests:
 
      alert_rule_test:
        - eval_time: 10m
-         alertname: sonarr_unhealthy
+         alertname: ProcessUnhealthy
          exp_alerts: []
 
        - eval_time: 60m
-         alertname: sonarr_unhealthy
+         alertname: ProcessUnhealthy
          exp_alerts:
            - exp_labels:
                severity: critical
