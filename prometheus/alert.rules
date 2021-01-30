@@ -69,3 +69,23 @@ groups:
     annotations:
       summary: "Server reboot required"
       description: "Docker host requires reboot."
+
+- name: backup
+  rules:
+  - alert: BackupMetadataUnavailable
+    expr: absent_over_time(last_backup_success[2m]) == 1
+    labels:
+      severity: critical
+    annotations:
+      summary: "Backup metadata unavailable"
+      description: >-
+        Information about backups is unavailable, so we don't know if they're
+        succeeding or not.
+  - alert: BackupTooOld
+    expr: time() - last_backup_success > 172800
+    labels:
+      severity: critical
+    annotations:
+      summary: "Backup too old"
+      description: >-
+        Backup for {{ $labels.path }} is over 2 days old.
