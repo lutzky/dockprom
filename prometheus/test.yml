@@ -82,7 +82,7 @@ tests:
          values: '90000x72'
 
      alert_rule_test:
-       - eval_time: 49h
+       - eval_time: 61h
          alertname: BackupTooOld
          exp_alerts:
            - exp_labels:
@@ -91,4 +91,4 @@ tests:
              exp_annotations:
                summary: Backup too old
                description: >-
-                 Backup for gmail is over 2 days old.
+                 Backup for gmail is over 2.5 days old.

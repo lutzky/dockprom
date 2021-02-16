@@ -92,10 +92,10 @@ groups:
   - name: backup
     rules:
       - alert: BackupTooOld
-        expr: time() - last_backup_success > 172800
+        expr: time() - last_backup_success > 216000
         labels:
           severity: critical
         annotations:
           summary: "Backup too old"
           description: >-
-            Backup for {{ $labels.path }} is over 2 days old.
+            Backup for {{ $labels.path }} is over 2.5 days old.
