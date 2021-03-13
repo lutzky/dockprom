@@ -1,3 +1,4 @@
+---
 version: '2.1'
 
 networks:
@@ -8,8 +9,8 @@ networks:
       name: wamc_default
 
 volumes:
-    prometheus_data: {}
-    grafana_data: {}
+  prometheus_data: {}
+  grafana_data: {}
 
 services:
 
@@ -35,15 +36,15 @@ services:
     expose:
       - 9090
     extra_hosts:
-      # TODO: Once host-gateway is available (docker 20.10?) use that.
-      # See https://github.com/moby/moby/pull/40007 and
-      # https://stackoverflow.com/questions/24319662
+      # Note: host.docker.internal is currently unsupported in Docker-on-Linux.
+      # See https://stackoverflow.com/questions/24319662
       - "host.docker.internal:172.19.0.1"
     labels:
       org.label-schema.group: "monitoring"
       traefik.enable: "true"
       traefik.docker.network: "wamc_default"
-      traefik.http.middlewares.prometheus-stripprefix.stripprefix.prefixes: /prometheus
+      traefik.http.middlewares.prometheus-stripprefix.stripprefix.prefixes: >-
+        /prometheus
       traefik.http.routers.prometheus.rule: PathPrefix(`/prometheus`)
       traefik.http.routers.prometheus.middlewares: prometheus-stripprefix
     links:
@@ -69,7 +70,8 @@ services:
       org.label-schema.group: "monitoring"
       traefik.enable: "true"
       traefik.docker.network: "wamc_default"
-      traefik.http.middlewares.alertmanager-stripprefix.stripprefix.prefixes: /alertmanager
+      traefik.http.middlewares.alertmanager-stripprefix.stripprefix.prefixes: >-
+        /alertmanager
       traefik.http.routers.alertmanager.rule: PathPrefix(`/alertmanager`)
       traefik.http.routers.alertmanager.middlewares: alertmanager-stripprefix
 
@@ -148,7 +150,7 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-      #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+      # - /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
     restart: unless-stopped
     networks:
       - monitor-net
@@ -182,7 +184,8 @@ services:
       org.label-schema.group: "monitoring"
       traefik.enable: "true"
       traefik.docker.network: "wamc_default"
-      traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes: /grafana
+      traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes: >-
+        /grafana
       traefik.http.routers.grafana.rule: PathPrefix(`/grafana`)
       traefik.http.routers.grafana.middlewares: grafana-stripprefix
 
