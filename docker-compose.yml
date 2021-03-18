@@ -4,6 +4,13 @@ version: '2.1'
 networks:
   monitor-net:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.41.0.0/16
+          ip_range: 172.41.2.0/24
+          gateway: 172.41.2.254
+
   wamc-web:
     external:
       name: wamc_default
@@ -38,7 +45,9 @@ services:
     extra_hosts:
       # Note: host.docker.internal is currently unsupported in Docker-on-Linux.
       # See https://stackoverflow.com/questions/24319662
-      - "host.docker.internal:172.19.0.1"
+      # Instead, we've statically configured the addresses for monitor-net and
+      # use the gateway for that to access the port and the host.
+      - "host.docker.internal:172.41.2.254"
     labels:
       org.label-schema.group: "monitoring"
       traefik.enable: "true"
@@ -47,8 +56,6 @@ services:
         /prometheus
       traefik.http.routers.prometheus.rule: PathPrefix(`/prometheus`)
       traefik.http.routers.prometheus.middlewares: prometheus-stripprefix
-    links:
-      - "nodeexporter:nodeexporter"
 
   alertmanager:
     image: prom/alertmanager:v0.21.0
