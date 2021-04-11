@@ -34,7 +34,7 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--web.external-url=https://wamc.lutzky.net/prometheus'
       - '--web.route-prefix=/'
-      - '--storage.tsdb.retention.time=200h'
+      - '--storage.tsdb.retention.time=800d'
       - '--web.enable-lifecycle'
     restart: unless-stopped
     networks:
