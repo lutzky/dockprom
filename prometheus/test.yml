@@ -1,104 +1,111 @@
+---
 rule_files:
   - alert.rules
 
 evaluation_interval: 1m
 
 tests:
-   - interval: 1m
-     input_series:
-       - series: 'sonarr_status{instance="sonarrexporter:9715", job="sonarr_exporter", sonarr_name="sonarr"}'
-         values: '1 1 0 0 1'
-       - series: 'sonarr_status{instance="radarrexporter:9715", job="radarr_exporter", sonarr_name="radarr"}'
-         values: '1 1 0 0 1'
+  - interval: 1m
+    input_series:
+      - series: >-
+          sonarr_status{instance="sonarrexporter:9715",
+          job="sonarr_exporter", sonarr_name="sonarr"}
+        values: '1 1 0 0 1'
+      - series: >-
+          sonarr_status{instance="radarrexporter:9715",
+          job="radarr_exporter", sonarr_name="radarr"}
+        values: '1 1 0 0 1'
 
-     alert_rule_test:
-       - eval_time: 30s
-         alertname: ProcessDown
-         exp_alerts: []
+    alert_rule_test:
+      - eval_time: 30s
+        alertname: ProcessDown
+        exp_alerts: []
 
-       - eval_time: 4m
-         alertname: ProcessDown
-         exp_alerts: []
+      - eval_time: 4m
+        alertname: ProcessDown
+        exp_alerts: []
 
-       - eval_time: 3m
-         alertname: ProcessDown
-         exp_alerts:
-           - exp_labels:
-               severity: critical
-               instance: sonarrexporter:9715
-               job: sonarr_exporter
-               sonarr_name: sonarr
-             exp_annotations:
-               summary: "sonarr is down"
-               description: "sonarr cannot be reached or is otherwise indicating a system error"
-           - exp_labels:
-               severity: critical
-               instance: radarrexporter:9715
-               job: radarr_exporter
-               sonarr_name: radarr
-             exp_annotations:
-               summary: "radarr is down"
-               description: "radarr cannot be reached or is otherwise indicating a system error"
+      - eval_time: 3m
+        alertname: ProcessDown
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              instance: sonarrexporter:9715
+              job: sonarr_exporter
+              sonarr_name: sonarr
+            exp_annotations:
+              summary: "sonarr is down"
+              description: >-
+                sonarr cannot be reached or
+                is otherwise indicating a system error
+          - exp_labels:
+              severity: critical
+              instance: radarrexporter:9715
+              job: radarr_exporter
+              sonarr_name: radarr
+            exp_annotations:
+              summary: "radarr is down"
+              description: >-
+                radarr cannot be reached or
+                is otherwise indicating a system error
 
+  - interval: 1m
+    input_series:
+      - series: >-
+          sonarr_health_issues{instance="sonarrexporter:9715",
+          job="sonarr_exporter", sonarr_name="sonarr"}
+        values: '1+0x61'
+      - series: >-
+          sonarr_health_issues{instance="radarrexporter:9715",
+          job="radarr_exporter", sonarr_name="radarr", type="error"}
+        values: '1+0x61'
 
-   - interval: 1m
-     input_series:
-       - series: >-
-           sonarr_health_issues{instance="sonarrexporter:9715",
-           job="sonarr_exporter", sonarr_name="sonarr"}
-         values: '1+0x61'
-       - series: >-
-           sonarr_health_issues{instance="radarrexporter:9715",
-           job="radarr_exporter", sonarr_name="radarr", type="error"}
-         values: '1+0x61'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ProcessUnhealthy_NonError
+        exp_alerts: []
 
-     alert_rule_test:
-       - eval_time: 10m
-         alertname: ProcessUnhealthy_NonError
-         exp_alerts: []
+      - eval_time: 60m
+        alertname: ProcessUnhealthy_NonError
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              instance: sonarrexporter:9715
+              job: sonarr_exporter
+              sonarr_name: sonarr
+            exp_annotations:
+              summary: "sonarr is experiencing health issues"
+              description: >-
+                sonarr is indicating non-error-level health issues.
 
-       - eval_time: 60m
-         alertname: ProcessUnhealthy_NonError
-         exp_alerts:
-           - exp_labels:
-               severity: warning
-               instance: sonarrexporter:9715
-               job: sonarr_exporter
-               sonarr_name: sonarr
-             exp_annotations:
-               summary: "sonarr is experiencing health issues"
-               description: >-
-                 sonarr is indicating non-error-level health issues.
+      - eval_time: 60m
+        alertname: ProcessUnhealthy_Error
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              instance: radarrexporter:9715
+              job: radarr_exporter
+              sonarr_name: radarr
+              type: error
+            exp_annotations:
+              summary: "radarr is experiencing health issues"
+              description: >-
+                radarr is indicating error-level health issues.
 
-       - eval_time: 60m
-         alertname: ProcessUnhealthy_Error
-         exp_alerts:
-           - exp_labels:
-               severity: critical
-               instance: radarrexporter:9715
-               job: radarr_exporter
-               sonarr_name: radarr
-               type: error
-             exp_annotations:
-               summary: "radarr is experiencing health issues"
-               description: >-
-                 radarr is indicating error-level health issues.
+  - interval: 1h
+    input_series:
+      - series: 'last_backup_success{path="gmail"}'
+        values: '0x72'
+      - series: 'last_backup_success{path="drive"}'
+        values: '90000x72'
 
-   - interval: 1h
-     input_series:
-       - series: 'last_backup_success{path="gmail"}'
-         values: '0x72'
-       - series: 'last_backup_success{path="drive"}'
-         values: '90000x72'
-
-     alert_rule_test:
-       - eval_time: 61h
-         alertname: BackupTooOld
-         exp_alerts:
-           - exp_labels:
-               severity: critical
-               path: gmail
-             exp_annotations:
-               summary: Backup too old
-               description: >-
-                 Backup for gmail is over 2.5 days old.
+    alert_rule_test:
+      - eval_time: 61h
+        alertname: BackupTooOld
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              path: gmail
+            exp_annotations:
+              summary: Backup too old
+              description: Backup for gmail is over 2.5 days old.
