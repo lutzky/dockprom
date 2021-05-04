@@ -43,36 +43,46 @@ tests:
 
    - interval: 1m
      input_series:
-       - series: 'sonarr_health_issues{instance="sonarrexporter:9715", job="sonarr_exporter", sonarr_name="sonarr"}'
+       - series: >-
+           sonarr_health_issues{instance="sonarrexporter:9715",
+           job="sonarr_exporter", sonarr_name="sonarr"}
          values: '1+0x61'
-       - series: 'sonarr_health_issues{instance="radarrexporter:9715", job="radarr_exporter", sonarr_name="radarr"}'
+       - series: >-
+           sonarr_health_issues{instance="radarrexporter:9715",
+           job="radarr_exporter", sonarr_name="radarr", type="error"}
          values: '1+0x61'
-
 
      alert_rule_test:
        - eval_time: 10m
-         alertname: ProcessUnhealthy
+         alertname: ProcessUnhealthy_NonError
          exp_alerts: []
 
        - eval_time: 60m
-         alertname: ProcessUnhealthy
+         alertname: ProcessUnhealthy_NonError
          exp_alerts:
            - exp_labels:
-               severity: critical
+               severity: warning
                instance: sonarrexporter:9715
                job: sonarr_exporter
                sonarr_name: sonarr
              exp_annotations:
                summary: "sonarr is experiencing health issues"
-               description: "sonarr is indicating health issues."
+               description: >-
+                 sonarr is indicating non-error-level health issues.
+
+       - eval_time: 60m
+         alertname: ProcessUnhealthy_Error
+         exp_alerts:
            - exp_labels:
                severity: critical
                instance: radarrexporter:9715
                job: radarr_exporter
                sonarr_name: radarr
+               type: error
              exp_annotations:
                summary: "radarr is experiencing health issues"
-               description: "radarr is indicating health issues."
+               description: >-
+                 radarr is indicating error-level health issues.
 
    - interval: 1h
      input_series:
