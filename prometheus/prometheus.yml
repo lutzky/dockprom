@@ -72,7 +72,7 @@ scrape_configs:
     metrics_path: "/api/export/prometheus/metrics"
     basic_auth:
       username: admin
-      password: admin
+      password_file: pikvm.password
     static_configs:
       - targets: ['pikvm']
     tls_config:
