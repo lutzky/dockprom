@@ -68,6 +68,17 @@ scrape_configs:
       - target_label: __address__
         replacement: blackbox_exporter:9115
 
+  - job_name: "pikvm"
+    metrics_path: "/api/export/prometheus/metrics"
+    basic_auth:
+      username: admin
+      password: admin
+    static_configs:
+      - targets: ['pikvm']
+    tls_config:
+      insecure_skip_verify: true  # For self-signed certificate
+
+
 alerting:
   alertmanagers:
     - scheme: http
