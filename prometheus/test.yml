@@ -5,7 +5,8 @@ rule_files:
 evaluation_interval: 1m
 
 tests:
-  - interval: 1m
+  - name: sonarr
+    interval: 1m
     input_series:
       - series: >-
           sonarr_status{instance="sonarrexporter:9715",
@@ -49,7 +50,8 @@ tests:
                 radarr cannot be reached or
                 is otherwise indicating a system error
 
-  - interval: 1m
+  - name: process_unhealthy
+    interval: 1m
     input_series:
       - series: >-
           sonarr_health_issues{instance="sonarrexporter:9715",
@@ -92,7 +94,8 @@ tests:
               description: >-
                 radarr is indicating error-level health issues.
 
-  - interval: 1h
+  - name: backup
+    interval: 1h
     input_series:
       - series: 'last_backup_success{path="gmail"}'
         values: '0x72'
