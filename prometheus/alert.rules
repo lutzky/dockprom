@@ -103,6 +103,7 @@ groups:
     rules:
       - alert: BackupTooOld
         expr: time() - last_backup_success > 216000
+        for: 1h
         labels:
           severity: critical
         annotations:

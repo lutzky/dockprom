@@ -95,15 +95,21 @@ tests:
                 radarr is indicating error-level health issues.
 
   - name: backup
-    interval: 1h
+    interval: 1m
+    # See https://stackoverflow.com/questions/67835221/ for why we do this
+    # and use long input_series instead of using interval: 1h.
     input_series:
       - series: 'last_backup_success{path="gmail"}'
-        values: '0x72'
+        values: '0x3800'
       - series: 'last_backup_success{path="drive"}'
-        values: '90000x72'
+        values: '3600+0x3800'
 
     alert_rule_test:
-      - eval_time: 61h
+      - eval_time: 60h1m
+        alertname: BackupTooOld
+        exp_alerts: []
+
+      - eval_time: 61h1m
         alertname: BackupTooOld
         exp_alerts:
           - exp_labels:
@@ -112,3 +118,19 @@ tests:
             exp_annotations:
               summary: Backup too old
               description: Backup for gmail is over 2.5 days old.
+
+      - eval_time: 62h1m
+        alertname: BackupTooOld
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              path: gmail
+            exp_annotations:
+              summary: Backup too old
+              description: Backup for gmail is over 2.5 days old.
+          - exp_labels:
+              severity: critical
+              path: drive
+            exp_annotations:
+              summary: Backup too old
+              description: Backup for drive is over 2.5 days old.
