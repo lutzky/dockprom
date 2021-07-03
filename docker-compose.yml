@@ -32,7 +32,7 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.external-url=https://wamc.lutzky.net/prometheus'
+      - '--web.external-url=https://${DOMAIN_MAIN}/prometheus'
       - '--web.route-prefix=/'
       - '--storage.tsdb.retention.time=800d'
       - '--web.enable-lifecycle'
@@ -54,7 +54,9 @@ services:
       traefik.docker.network: "wamc_default"
       traefik.http.middlewares.prometheus-stripprefix.stripprefix.prefixes: >-
         /prometheus
-      traefik.http.routers.prometheus.rule: PathPrefix(`/prometheus`)
+      traefik.http.routers.prometheus.rule: >-
+        Host(`${DOMAIN_MAIN}`) && PathPrefix(`/prometheus`)
+      traefik.http.routers.prometheus.tls.certresolver: acme-wamc
       traefik.http.routers.prometheus.middlewares: prometheus-stripprefix
 
   alertmanager:
@@ -65,7 +67,7 @@ services:
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
-      - '--web.external-url=https://wamc.lutzky.net/alertmanager'
+      - '--web.external-url=https://${DOMAIN_MAIN}/alertmanager'
       - '--web.route-prefix=/'
     restart: unless-stopped
     networks:
@@ -79,7 +81,9 @@ services:
       traefik.docker.network: "wamc_default"
       traefik.http.middlewares.alertmanager-stripprefix.stripprefix.prefixes: >-
         /alertmanager
-      traefik.http.routers.alertmanager.rule: PathPrefix(`/alertmanager`)
+      traefik.http.routers.alertmanager.rule: >-
+        Host(`${DOMAIN_MAIN}`) && PathPrefix(`/alertmanager`)
+      traefik.http.routers.alertmanager.tls.certresolver: acme-wamc
       traefik.http.routers.alertmanager.middlewares: alertmanager-stripprefix
 
   alertmanager-bot:
@@ -193,7 +197,9 @@ services:
       traefik.docker.network: "wamc_default"
       traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes: >-
         /grafana
-      traefik.http.routers.grafana.rule: PathPrefix(`/grafana`)
+      traefik.http.routers.grafana.rule: >-
+        Host(`${DOMAIN_MAIN}`) && PathPrefix(`/grafana`)
+      traefik.http.routers.grafana.tls.certresolver: acme-wamc
       traefik.http.routers.grafana.middlewares: grafana-stripprefix
 
   pushgateway:
@@ -222,6 +228,3 @@ services:
       org.label-schema.group: "monitoring"
       traefik.enable: "true"
       traefik.docker.network: "wamc_default"
-      traefik.http.middlewares.prober-stripprefix.stripprefix.prefixes: /prober
-      traefik.http.routers.prober.rule: PathPrefix(`/prober`)
-      traefik.http.routers.prober.middlewares: prober-stripprefix
