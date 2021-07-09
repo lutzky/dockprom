@@ -57,7 +57,7 @@ services:
       traefik.http.routers.prometheus.rule: >-
         Host(`${DOMAIN_MAIN}`) && PathPrefix(`/prometheus`)
       traefik.http.routers.prometheus.tls.certresolver: acme-wamc
-      traefik.http.routers.prometheus.middlewares: prometheus-stripprefix
+      traefik.http.routers.prometheus.middlewares: prometheus-stripprefix,auth@docker
 
   alertmanager:
     image: prom/alertmanager:v0.21.0
@@ -84,7 +84,7 @@ services:
       traefik.http.routers.alertmanager.rule: >-
         Host(`${DOMAIN_MAIN}`) && PathPrefix(`/alertmanager`)
       traefik.http.routers.alertmanager.tls.certresolver: acme-wamc
-      traefik.http.routers.alertmanager.middlewares: alertmanager-stripprefix
+      traefik.http.routers.alertmanager.middlewares: alertmanager-stripprefix,auth@docker
 
   alertmanager-bot:
     image: metalmatze/alertmanager-bot:0.4.2
@@ -200,7 +200,7 @@ services:
       traefik.http.routers.grafana.rule: >-
         Host(`${DOMAIN_MAIN}`) && PathPrefix(`/grafana`)
       traefik.http.routers.grafana.tls.certresolver: acme-wamc
-      traefik.http.routers.grafana.middlewares: grafana-stripprefix
+      traefik.http.routers.grafana.middlewares: grafana-stripprefix,auth@docker
 
   pushgateway:
     image: prom/pushgateway:v1.4.0
