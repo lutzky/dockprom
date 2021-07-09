@@ -226,5 +226,3 @@ services:
       - 9115
     labels:
       org.label-schema.group: "monitoring"
-      traefik.enable: "true"
-      traefik.docker.network: "wamc_default"
